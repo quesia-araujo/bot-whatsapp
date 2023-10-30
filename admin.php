@@ -1,26 +1,48 @@
 <?php
 session_start();
-# protegendo as paginas
+require_once('conn.php');
 error_reporting(0);
-ini_set("display_errors", 0);
+ini_set("display_errors", 0 );
 
-if($_SESSION['email']== True){
+if($_SESSION['email'] == True){
+
+  $email_cliente= $_SESSION['email'];
+  $busca_email = "SELECT * FROM login WHERE email = '$email_cliente'";
+  $resultado_busca = mysqli_query($conn, $busca_email);
+  $total_clientes = mysqli_num_rows($resultado_busca);
+
+  while($dados_usuario = mysqli_fetch_array($resultado_busca)){
+$email_cliente = $dados_usuario['email'];
+$senha_cliente= $dados_usuario['senha'];
+$nome_cliente= $dados_usuario['nome'];
+$tipo_cliente= $dados_usuario['tipo'];
+
+if($tipo_cliente == '1'){
+  echo "<meta http-equiv='refresh' content='0;url=index.php'>"; 
+
+}
+
+  }
+
+
 
 
 }else{
-  echo"<meta http-equiv='refresh' content='0;url=login.php'>";
+  #echo "<meta http-equiv='refresh' content='0;url=login.php'>";   
 
 ?>
+
 
 <script type="text/javascript">
-  window.location="login.php";
-</script>
-<?php
+	window.location="login.php";
+	</script>
+
+
+<?php  
+
 }
-
-$adm = 0;
-
 ?>
+
 
 
 <!DOCTYPE html>
@@ -51,7 +73,14 @@ $adm = 0;
           <li class="menu-item"><a href="produtos.php" data-scroll>PRODUTOS</a></li>
           <li class="menu-item"><a href="pedidos.php" data-scroll>PEDIDOS</a></li>
           <li class="menu-item "><a href="config.php" data-scroll>CONFIGURAÇÕES</a></li>      
+          <?php
+          if($tipo_cliente == 2){
+            ?>
+             
           <li class="menu-item active"><a href="admin.php" data-scroll>ADMIN</a></li>      
+          <?php
+          }
+          ?>     
           <li class="menu-item"><a href="sair.php" data-scroll>SAIR</a></li>
     
         </ul>
@@ -143,13 +172,34 @@ $adm = 0;
 <br>
 
 
+<?php
+$nome_usuario = $_POST['nome_usuario'];
+$opcao_busca = $_POST['opcao_busca'];
+?>
 
+
+<?php
+
+$busca_usuarios = "SELECT * FROM login WHERE nome = '$nome_usuario'";
+$resultado_busca = mysqli_query($conn, $busca_usuarios);
+$total_clientes = mysqli_num_rows($resultado_busca);
+
+
+  while($dados_usuario = mysqli_fetch_array($resultado_busca)){
+$email_cliente = $dados_usuario['email'];
+$senha_cliente= $dados_usuario['senha'];
+$nome_cliente= $dados_usuario['nome'];
+$tipo_cliente= $dados_usuario['tipo'];
+
+
+?>
 
 <!-- Formulário de habilitar e desabilitar -->
 <form method="post" action="">
-  <h2>Usuário encontrado:</h2>
-  <p>Nome: Fulano de Tal</p>
-  <p>Email: fulano@example.com</p>
+
+  <h2>Usuário encontrado: <?php echo "<b>$total_clientes</b>"; ?></h2>
+  <p>Nome: <?php echo  $nome_cliente;?></p>
+  <p>Email: <?php echo  $email_cliente;?></p>
   <p>Status: Ativo</p>
   <label>
     <input type="radio" name="status" value="ativo" checked> Ativar
@@ -159,6 +209,54 @@ $adm = 0;
   </label>
   <input type="submit" value="Salvar">
 </form>
+<br>
+
+<?php
+}
+?>
+
+
+<?php
+
+if($opcao_busca == 'todos'){
+
+  $busca_usuarios = "SELECT * FROM login";
+$resultado_busca = mysqli_query($conn, $busca_usuarios);
+$total_clientes = mysqli_num_rows($resultado_busca);
+
+
+  while($dados_usuario = mysqli_fetch_array($resultado_busca)){
+$email_cliente = $dados_usuario['email'];
+$senha_cliente= $dados_usuario['senha'];
+$nome_cliente= $dados_usuario['nome'];
+$tipo_cliente= $dados_usuario['tipo'];
+
+?>
+
+<form method="post" action="">
+
+  <h2>Usuário encontrado: <?php echo "<b>$total_clientes</b>"; ?></h2>
+  <p>Nome: <?php echo  $nome_cliente;?></p>
+  <p>Email: <?php echo  $email_cliente;?></p>
+  <p>Status: Ativo</p>
+  <label>
+    <input type="radio" name="status" value="ativo" checked> Ativar
+  </label>
+  <label>
+    <input type="radio" name="status" value="inativo"> Desativar
+  </label>
+  <input type="submit" value="Salvar">
+</form>
+<br>
+
+<?php
+
+}
+
+}
+
+?>
+
 
   </body>
 </html>

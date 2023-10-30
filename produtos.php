@@ -1,24 +1,47 @@
 <?php
 session_start();
+require_once('conn.php');
 error_reporting(0);
-ini_set("display_errors", 0);
+ini_set("display_errors", 0 );
 
 if($_SESSION['email'] == True){
 
+  $email_cliente= $_SESSION['email'];
+  $busca_email = "SELECT * FROM login WHERE email = '$email_cliente'";
+  $resultado_busca = mysqli_query($conn, $busca_email);
+  $total_clientes = mysqli_num_rows($resultado_busca);
+
+  while($dados_usuario = mysqli_fetch_array($resultado_busca)){
+$email_cliente = $dados_usuario['email'];
+$senha_cliente= $dados_usuario['senha'];
+$nome_cliente= $dados_usuario['nome'];
+$tipo_cliente= $dados_usuario['tipo'];
+
+## gas e agua
+
+$gas_cliente= $dados_usuario['prod_gas'];
+$agua_cliente= $dados_usuario['prod_agua'];
+
+
+  }
+
+
+
+
 }else{
-echo"<meta http-equiv='refresh' content='0;url=login.php'>";
+  #echo "<meta http-equiv='refresh' content='0;url=login.php'>";   
 
 ?>
 
+
 <script type="text/javascript">
-  window.location="login.php";
-</script>
+	window.location="login.php";
+	</script>
 
-<?php
+
+<?php  
+
 }
-
-$adm = 0;
-
 ?>
 
 <style>
@@ -103,7 +126,14 @@ $adm = 0;
           <li class="menu-item active"><a href="produtos.php" data-scroll>PRODUTOS</a></li>
           <li class="menu-item"><a href="pedidos.php" data-scroll>PEDIDOS</a></li>
           <li class="menu-item"><a href="config.php" data-scroll>CONFIGURAÇÕES</a></li>      
+          <?php
+          if($tipo_cliente == 2){
+            ?>
+             
           <li class="menu-item"><a href="admin.php" data-scroll>ADMIN</a></li>      
+          <?php
+          }
+          ?>     
           <li class="menu-item"><a href="sair.php" data-scroll>SAIR</a></li>
     
         </ul>
@@ -113,7 +143,7 @@ $adm = 0;
     <section id="home">
     <body>
         <div align='center'>
-    <form id="form1" name="form1" method="post" action="">
+    <form id="form1" name="form1" method="post" action="produtos_up.php">
       <table>
         <tr>
           <th>Produtos</th>
@@ -122,14 +152,14 @@ $adm = 0;
         <tr>
           <td>Botijão Gás</td>
           <td><br>
-          <input type="number" name="gas" id="gas" step="0.01" min="0.00" max="9999.99" lang="pt-BR" style="text-align: right; direction: rtl;" />
+          <input type="number" name="gas" value ='<?php echo "$gas_cliente"?>' id="gas" step="0.01" min="0.00" max="9999.99" lang="pt-BR" style="text-align: right; direction: rtl;" />
 
           </td>
         </tr>
         <tr>
           <td>Galão de Água</td>
           <td><br>
-          <input type="number" name="agua" id="agua" step="0.01" min="0.00" max="9999.99" lang="pt-BR" style="text-align: right; direction: rtl;" />
+          <input type="number" name="agua"  value ='<?php echo "$agua_cliente"?>' id="agua" step="0.01" min="0.00" max="9999.99" lang="pt-BR" style="text-align: right; direction: rtl;" />
 
           </td>
         </tr>
