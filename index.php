@@ -12,10 +12,13 @@ if($_SESSION['email'] == True){
   $total_clientes = mysqli_num_rows($resultado_busca);
 
   while($dados_usuario = mysqli_fetch_array($resultado_busca)){
-$email_cliente = $dados_usuario['email'];
-$senha_cliente= $dados_usuario['senha'];
-$nome_cliente= $dados_usuario['nome'];
-$tipo_cliente= $dados_usuario['tipo'];
+    $email_cliente = $dados_usuario['email'];
+    $senha_cliente= $dados_usuario['senha'];
+    $nome_cliente= $dados_usuario['nome'];
+    $tipo_cliente= $dados_usuario['tipo'];
+
+    $prod_gas = $dados_usuario['prod_gas'];
+    $prod_agua = $dados_usuario['prod_agua'];
 
 
 
@@ -132,27 +135,85 @@ $adm = 0;
     </style>
   </head>
   <body>
+  <?php
+
+ # $email_cliente= $_SESSION['email'];
+  $busca_pedidos = "SELECT * FROM pedidos WHERE status = 'enviado' AND email_painel = '$email_cliente'";
+  $resultado_pedidos = mysqli_query($conn,  $busca_pedidos);
+  $total_pedidos = mysqli_num_rows($resultado_pedidos);
+
+  echo $total_pedidos;
+
+  while($dados_pedidos = mysqli_fetch_array($resultado_pedidos)){
+    $nome_pedidos = $dados_pedidos['nome_cliente'];
+    $telefone_pedidos = $dados_pedidos['telefone'];
+    $endereco_pedidos = $dados_pedidos['endereco'];
+    $qtd_gas_pedidos = $dados_pedidos['qtd_gas'];
+    $qtd_agua_pedidos = $dados_pedidos['qtd_agua'];
+    $forma_pagamento_pedidos = $dados_pedidos['forma_pagamento'];
+    $status_pedidos = $dados_pedidos['status'];
+    $data_hora_pedidos = $dados_pedidos['data_hora'];
+    $email_painel_pedidos = $dados_pedidos['email_painel'];
+    $id_pedidos = $dados_pedidos['id'];
+    
+
+
+
+  ?>
     <form>
       <h1>Detalhes da venda</h1>
+      <?php echo $data_brasil =date('d/m/Y H:i:s', strtotime($data_hora_pedidos));?>
       <table>
         <tr>
-          <td>Produto:</td>
-          <td>Produto A</td>
+          <td>Cliente:</td>
+          <td><?php echo $nome_pedidos;?> </td>
+        </tr>
+        <tr>
+          <td>Telefone:</td>
+          <td><?php echo $telefone_pedidos;?> </td>
+        </tr>
+        <tr>
+          <td>Endereço:</td>
+          <td><?php echo $endereco_pedidos;?> </td>
+        </tr>
+        <tr>
+          <td>Água quant.:</td>
+          <td><?php echo $qtd_agua_pedidos;?> </td>
+        </tr>
+        <tr>
+          <td>Gás quant.:</td>
+          <td><?php echo $qtd_gas_pedidos ;?></td>
         </tr>
         <tr>
           <td>Data:</td>
-          <td>01/01/2022</td>
+          <td><?php echo $data_brasil =date('d/m/Y', strtotime($data_hora_pedidos));?></td>
         </tr>
         <tr>
           <td>Hora:</td>
-          <td>14:30</td>
+          <td><?php echo $data_brasil =date('H:i:s', strtotime($data_hora_pedidos));?></td>
         </tr>
         <tr>
+        <tr>
+          <td>Forma de pagamento:</td>
+          <td><?php echo $forma_pagamento_pedidos;?> </td>
+        </tr>
           <td>Valor:</td>
-          <td>R$ 50,00</td>
+          <td>R$ <?php 
+          $total_gas = $prod_gas * $qtd_gas_pedidos;
+          $total_agua = $prod_agua * $qtd_agua_pedidos;
+          $total_gastos = $total_gas + $total_agua;
+          echo $total_gastos ;
+          ?></td>
         </tr>
       </table>
     </form>
+    <br>
+    <br>
+    <?php
+  
+    }
+    ?>
+
   </body>
 </html>
     </section>

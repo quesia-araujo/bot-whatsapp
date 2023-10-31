@@ -5,41 +5,32 @@ error_reporting(0);
 ini_set("display_errors", 0 );
 
 if($_SESSION['email'] == True){
-
   $email_cliente= $_SESSION['email'];
   $busca_email = "SELECT * FROM login WHERE email = '$email_cliente'";
   $resultado_busca = mysqli_query($conn, $busca_email);
   $total_clientes = mysqli_num_rows($resultado_busca);
 
   while($dados_usuario = mysqli_fetch_array($resultado_busca)){
-$email_cliente = $dados_usuario['email'];
-$senha_cliente= $dados_usuario['senha'];
-$nome_cliente= $dados_usuario['nome'];
-$tipo_cliente= $dados_usuario['tipo'];
+    $email_cliente = $dados_usuario['email'];
+    $senha_cliente= $dados_usuario['senha'];
+    $nome_cliente= $dados_usuario['nome'];
+    $tipo_cliente= $dados_usuario['tipo'];
 
-if($tipo_cliente == '1'){
-  echo "<meta http-equiv='refresh' content='0;url=index.php'>"; 
-
-}
-
+    if($tipo_cliente == '1'){
+      echo "<meta http-equiv='refresh' content='0;url=index.php'>"; 
+    }
   }
-
-
-
-
 }else{
   #echo "<meta http-equiv='refresh' content='0;url=login.php'>";   
 
 ?>
 
 
-<script type="text/javascript">
-	window.location="login.php";
-	</script>
-
+  <script type="text/javascript">
+	  window.location="login.php";
+  </script>
 
 <?php  
-
 }
 ?>
 
@@ -179,33 +170,33 @@ $opcao_busca = $_POST['opcao_busca'];
 
 
 <?php
-
 $busca_usuarios = "SELECT * FROM login WHERE nome = '$nome_usuario'";
 $resultado_busca = mysqli_query($conn, $busca_usuarios);
 $total_clientes = mysqli_num_rows($resultado_busca);
 
 
-  while($dados_usuario = mysqli_fetch_array($resultado_busca)){
-$email_cliente = $dados_usuario['email'];
-$senha_cliente= $dados_usuario['senha'];
-$nome_cliente= $dados_usuario['nome'];
-$tipo_cliente= $dados_usuario['tipo'];
-
-
+while($dados_usuario = mysqli_fetch_array($resultado_busca)){
+  $id_cliente = $dados_usuario['id'];
+  $email_cliente = $dados_usuario['email'];
+  $senha_cliente= $dados_usuario['senha'];
+  $nome_cliente= $dados_usuario['nome'];
+  $tipo_cliente= $dados_usuario['tipo'];
+  $status_cliente= $dados_usuario['status'];
 ?>
 
 <!-- Formulário de habilitar e desabilitar -->
-<form method="post" action="">
+<form method="post" action=" config2.php">
 
   <h2>Usuário encontrado: <?php echo "<b>$total_clientes</b>"; ?></h2>
   <p>Nome: <?php echo  $nome_cliente;?></p>
   <p>Email: <?php echo  $email_cliente;?></p>
-  <p>Status: Ativo</p>
+  <input name="id_usuario" type= "hidden" id="id_usuario" value="<?php echo "$id_cliente" ?>">
+  <p>Status: <?php echo $status_cliente ?></p>
   <label>
-    <input type="radio" name="status" value="ativo" checked> Ativar
+    <input type="radio" name="status" value="ativo" <?php if($status_cliente == 'ativo'){echo 'checked';}?>> Ativar
   </label>
   <label>
-    <input type="radio" name="status" value="inativo"> Desativar
+    <input type="radio" name="status" value="inativo" <?php if($status_cliente == 'inativo'){echo 'checked';}?>> Desativar
   </label>
   <input type="submit" value="Salvar">
 </form>
@@ -217,33 +208,34 @@ $tipo_cliente= $dados_usuario['tipo'];
 
 
 <?php
-
 if($opcao_busca == 'todos'){
 
   $busca_usuarios = "SELECT * FROM login";
-$resultado_busca = mysqli_query($conn, $busca_usuarios);
-$total_clientes = mysqli_num_rows($resultado_busca);
+  $resultado_busca = mysqli_query($conn, $busca_usuarios);
+  $total_clientes = mysqli_num_rows($resultado_busca);
 
 
   while($dados_usuario = mysqli_fetch_array($resultado_busca)){
-$email_cliente = $dados_usuario['email'];
-$senha_cliente= $dados_usuario['senha'];
-$nome_cliente= $dados_usuario['nome'];
-$tipo_cliente= $dados_usuario['tipo'];
-
+    $id_cliente = $dados_usuario['id'];
+    $email_cliente = $dados_usuario['email'];
+    $senha_cliente= $dados_usuario['senha'];
+    $nome_cliente= $dados_usuario['nome'];
+    $tipo_cliente= $dados_usuario['tipo'];
+    $status_cliente= $dados_usuario['status'];
 ?>
 
-<form method="post" action="">
+<form method="post" action="config2.php">
 
   <h2>Usuário encontrado: <?php echo "<b>$total_clientes</b>"; ?></h2>
   <p>Nome: <?php echo  $nome_cliente;?></p>
   <p>Email: <?php echo  $email_cliente;?></p>
-  <p>Status: Ativo</p>
+  <input name="id_usuario" type= "hidden" id="id_usuario" value="<?php echo "$id_cliente" ?>">
+  <p>Status: <?php echo $status_cliente ?> </p>
   <label>
-    <input type="radio" name="status" value="ativo" checked> Ativar
+    <input type="radio" name="status" value="ativo" <?php if($status_cliente == 'ativo'){echo 'checked';}?>> Ativar
   </label>
   <label>
-    <input type="radio" name="status" value="inativo"> Desativar
+    <input type="radio" name="status" value="inativo" <?php if($status_cliente == 'inativo'){echo 'checked';}?>> Desativar
   </label>
   <input type="submit" value="Salvar">
 </form>

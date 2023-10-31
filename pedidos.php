@@ -12,17 +12,11 @@ if($_SESSION['email'] == True){
   $total_clientes = mysqli_num_rows($resultado_busca);
 
   while($dados_usuario = mysqli_fetch_array($resultado_busca)){
-$email_cliente = $dados_usuario['email'];
-$senha_cliente= $dados_usuario['senha'];
-$nome_cliente= $dados_usuario['nome'];
-$tipo_cliente= $dados_usuario['tipo'];
-
-
-
+    $email_cliente = $dados_usuario['email'];
+    $senha_cliente= $dados_usuario['senha'];
+    $nome_cliente= $dados_usuario['nome'];
+    $tipo_cliente= $dados_usuario['tipo'];
   }
-
-
-
 
 }else{
   #echo "<meta http-equiv='refresh' content='0;url=login.php'>";   
@@ -153,6 +147,29 @@ $tipo_cliente= $dados_usuario['tipo'];
 
     <section id="home">
     <body>
+<?php
+
+  $busca_pedidos = "SELECT * FROM pedidos WHERE status = 'aguardando' AND email_painel = '$email_cliente'";
+  $resultado_pedidos = mysqli_query($conn, $busca_pedidos);
+  $total_pedidos = mysqli_num_rows($resultado_pedidos);
+
+  echo $total_pedidos;
+
+  while($dados_pedidos = mysqli_fetch_array($resultado_pedidos)){
+    $id_pedido = $dados_pedidos['id'];
+    $nome_cliente = $dados_pedidos['nome_cliente'];
+    $id_cliente = $dados_pedidos['id_cliente'];
+    $telefone_cliente = $dados_pedidos['telefone'];
+    $endereco_cliente = $dados_pedidos['endereco'];
+    $qtd_gas_cliente = $dados_pedidos['qtd_gas'];
+    $qtd_agua_cliente = $dados_pedidos['qtd_agua'];
+    $forma_pagamento_cliente = $dados_pedidos['forma_pagamento'];
+    $status_cliente = $dados_pedidos['status'];
+    $data_hora_cliente = $dados_pedidos['data_hora'];
+    $email_painel = $dados_pedidos['email_painel'];
+
+?>
+
         <div align='center'>
         <form id="form1" name="form1" method="post" action="">
   <table width="80%" border="0">
@@ -165,29 +182,29 @@ $tipo_cliente= $dados_usuario['tipo'];
     </tr>
     <tr>
       <td><br><div align="center">GÁS</div></td>
-      <td><div align="center">1</div></td>
+      <td><div align="center"><?php echo "$qtd_gas_cliente"; ?> </div></td>
     </tr>
     <tr>
       <td><br><div align="center">ÁGUA</div></td>
-      <td><div align="center">1</div></td>
+      <td><div align="center"><?php echo "$qtd_agua_cliente"; ?></div></td>
     </tr>
     <tr>
       <td colspan="2"><div align="center"><b>CLIENTE:</b></div></td>
     </tr>
     <tr>
-      <td colspan="2"><div align="center">31 984767330 - Victor</div></td>
+      <td colspan="2"><div align="center"><?php echo "<b>$nome_cliente</b>: $telefone_cliente"; ?></div></td>
     </tr>
     <tr>
       <td colspan="2"><div align="center"><b>ENDEREÇO<b></div></td>
     </tr>
     <tr>
-      <td colspan="2"><div align="center">RUA ENDEREÇO EXEMPO....</div></td>
+      <td colspan="2"><div align="center"><?php echo "$endereco_cliente"; ?></div></td>
     </tr>
     <tr>
       <td colspan="2"><div align="center"><b>FORMA DE PAGAMENTO<b></div></td>
     </tr>
     <tr>
-      <td colspan="2"><div align="center">PAGAMENTO MODELO</div></td>
+      <td colspan="2"><div align="center"><?php echo "$forma_pagamento_cliente"; ?></div></td>
     </tr>
     <tr>
       <td>&nbsp;</td>
@@ -197,16 +214,15 @@ $tipo_cliente= $dados_usuario['tipo'];
       <td>
         <label>
           <div align="center">
-            <input type="submit" name="button" id="button" value="ACEITAR" formaction="aceitar.php" />
+            <input type="hidden" name="id_pedido" id="id_pedido" value=<?php echo"$id_pedido";?>/>
+            <input type="submit" name="button" id="button" value="ACEITAR" formaction="aceitar.php"  />
           </div>
         </label>
       </td>
       <td>
         <label>
           <div align="center">
-          <button style="background-color: red;">
-        <a href="recusar.php" style="text-decoration: none; color: white;"><h2>Recusar</h2></a>
-            </button>
+          <input type="submit" name="recusar" style="background-color: red;" id="button" value="RECUSAR" formaction="recusar.php" />
           </div>
         </label>
       </td>
@@ -215,6 +231,14 @@ $tipo_cliente= $dados_usuario['tipo'];
 </form>
 
     </div>
+    <br>
+    <br>
+
+<?php
+  }
+#########################################
+?>
+
     </section>
 
   
